@@ -1,0 +1,27 @@
+#https://realpython.com/introduction-to-python-generators/
+
+def infinite_sequence():
+    num=0
+    while True:
+        yield num
+        num += 1
+
+def is_palindrome(num):
+    #skip singe-digit inputs
+    if num //10 ==0:
+        return False
+    temp = num
+    reversed_num =0
+
+    while temp != 0:
+        reversed_num = (reversed_num*10) + (temp % 10)
+        tenp = temp // 10
+    if num == reversed_num:
+        return num
+    else:
+        return False
+
+for i in infinite_sequence():
+    pal = is_palindrome(i)
+    if pal:
+        print(i)
