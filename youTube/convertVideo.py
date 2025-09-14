@@ -10,9 +10,10 @@ def convertVideo(url,fname):
 
     #get the highest resolution stream (mp4 by default)
     video_stream = yt.streams.filter(file_extension='mp4',progressive=True).get_highest_resolution()
-
+    # fix video path so Linux will read it.
     video_stream.download(output_path=r'C:\Users\haroldbk\OneDrive\Dance_demos\shag' ,filename=fname)
 
     print('Download complete')
+
 
 convertVideo('https://www.youtube.com/watch?v=dsCl2kXJca4', 'what_a_feeling.mp4')    
