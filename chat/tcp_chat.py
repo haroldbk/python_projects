@@ -45,7 +45,7 @@ class TcpChatInterface(qtc.QObject):
            # prepare and send  a message
            raw_message = f'{self.username}{self.delimiter}{self.send_message}' 
            if self.client_socket.state() != qtn.QAbstractSocket.ConnectedState:
-               self.client_socket.connectToHost(self.client_socket, self.port)
+               self.client_socket.connectToHost(self.recipient, self.port)
            self.datastream = qtc.QDataStream(self.client_socket)
            self.datastream.writeQString(raw_message)
 
