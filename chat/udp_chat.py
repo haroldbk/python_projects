@@ -32,7 +32,12 @@ class MainWindow(qtw.QMainWindow):
         #your code here
         self.cw = ChatWindow()
         self.setCentralWidget(self.cw)
-
+        username = qtc.QDir.home().dirName()
+        self.interface = UdpChatInterface(username=username)
+        self.cw.submitted.connect(self.interface.send_message)
+        self.interface.received.connect(self.cw.write_message)
+        self.interface.error.connect(
+            lambda x: qtw.QMessageBox.critical(None,'Error', x))
         #your code ends here
         self.show()     
         
@@ -42,6 +47,7 @@ if __name__=='__main__':
     app =qtw.QApplication(sys.argv)
     w = MainWindow()
     sys.exit(app.exec_())
+
 
 
 
