@@ -2,8 +2,70 @@ import sys
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
+from PyQt5 import QtNetwork as qtn
+
+class TcpChatInterface(qtc.QObject):
+    # Network interface for chat messages 
+    port = 7777
+    delimiter = '||'
+    received = qtc.pyqtSignal(str,str)
+    error = qtc.pyqtSignal(str)
+
+    def __init__(self,username,recipient):
+        super().__init__()
+        self.username = username
+        self.recipient=recipient
+
+        self.listener = qtn.QTcpServer()
+        self.listener.listen(qtn.QHostAddress.Any,self.port)
+        self.listener.newConnection.connect(self.on_connection)
+        self.listener.acceptError.connect(self.on_error)
+        self.connections = []
+
+        self.client_socket=qtn.QTcpSocket()
+        self.client_socket.error.connect(self.on_error)
+
+    def on_connection(self):
+        connection = self.listener.nextPendingConnection()
+        self.connections.append(connection)
+        connection.readyRead.connect(self.process_datastream) 
+
+    def process_datastream(self):
+        for socket in self.connections:
+            self.datastream = qtc.QDataStream(socket)
+            if not socket.bytesAvailable():
+                continue
+            # message length = self.datastream.readUInt32()
+            raw_message = self.datastream.readQString()
+            if raw_message and self.delimiter in raw_message:
+                username,message = raw_message.split(self.delimiter,1)       
+                self.received.emit(username,message)
+
+    def send_message(self,message):
+           # prepare and send  a message
+           raw_message = f'{self.username}{self.delimiter}{self.send_message}' 
+           if self.client_socket.state() != qtn.QAbstractSocket.ConnectedState:
+               self.client_socket.connectToHost(self.client_socket, self.port)
+           self.datastream = qtc.QDataStream(self.client_socket)
+           self.datastream.writeQString(raw_message)
+
+           # echo locally
+           self.received.emit(self.username, message)
+
+    def on_error(self, socket_error):
+        # Magic to get the enum name
+        error_index = (qtn.QAbstractSocket
+                       .staticMetaObject
+                       .indexOfEnumerator('SocketError'))
+        error = (qtn.QAbstractSocket
+                 .staticMetaObject
+                 .enumerator(error_index)
+                 .valueToKey(socket_error))
+        message = f"There was a network error: {error}"
+        self.error.emit(message)
 
 class ChatWindow(qtw.QWidget):
+    submitted = qtc.pyqtSignal(str)
     def __init__(self):
         super().__init__() 
         self.setLayout(qtw.QGridLayout())
@@ -27,12 +89,22 @@ class MainWindow(qtw.QMainWindow):
         super().__init__()
        
         #your code here
+        username = qtc.QDir.home().dirName()
         self.cw = ChatWindow()
         self.setCentralWidget(self.cw)
+        recipient,_ =   qtw.QInputDialog.getText(
+            None, 'Recipient',
+            'Specify of the IP or hostname of the remote host')
+        if not recipient:
+            sys.exit()
+        self.interface = TcpChatInterface(username, recipient)
+        self.cw.submitted.connect(self.interface.send_message) 
+        self.interface.received.connect(self.cw.write_message)  
+        self.interface.error.connect(
+            lambda x: qtw.QMessageBox.critical(None, 'Error', x)) 
 
         #your code ends here
         self.show()     
-        
 
 
 if __name__=='__main__':
