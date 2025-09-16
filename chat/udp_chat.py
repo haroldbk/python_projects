@@ -6,6 +6,7 @@ from PyQt5 import QtGui as qtg
 from PyQt5 import QtNetwork as qtn
 
 class ChatWindow(qtw.QWidget):
+    submitted = qtc.pyqtSignal(str)
     def __init__(self):
         super().__init__() 
         self.setLayout(qtw.QGridLayout())
@@ -41,5 +42,6 @@ if __name__=='__main__':
     app =qtw.QApplication(sys.argv)
     w = MainWindow()
     sys.exit(app.exec_())
+
 
 
