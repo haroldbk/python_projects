@@ -9,7 +9,7 @@ import urllib.parse
 import requests
 
 CLIENT_ID = '4c80ffa3-eec4-4105-938a-cdb09e7680dd'
-CLIENT_SECRET = 'enw8Q~zQKQSVlSP8.S6Vv1AkG1Pa1IFIMKA8zato'
+CLIENT_SECRET = 'qQ38Q~KZU-nw3wQX9fKWBm8HAwy9l5AMVJlvrawM'
 REDIRECT_URI = 'http://localhost:8000/callback'
 AUTHORITY = 'https://login.microsoftonline.com/consumers'
 SCOPES = ['Files.ReadWrite', 'offline_access']
@@ -167,3 +167,4 @@ def main(folder):
 
 if __name__ == '__main__':
     main()
+
