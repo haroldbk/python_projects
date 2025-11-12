@@ -21,9 +21,32 @@ class MainWindow(qtw.QMainWindow):
         # Left tab: video + controls
         left_tab = qtw.QWidget()
         left_layout = qtw.QVBoxLayout(left_tab)
-
+        video_volume_layout = qtw.QHBoxLayout()
         self.video_frame = qtw.QFrame()
-        left_layout.addWidget(self.video_frame)
+        self.video_frame.setMinimumSize(400,300)
+
+        video_volume_layout.addWidget(self.video_frame,stretch=10)
+          #volume control
+        self.volume_slider = qtw.QSlider(qtc.Qt.Vertical)
+        self.volume_slider.setRange(0,100)
+        self.volume_slider.setValue(50)
+        self.volume_slider.setTickPosition(qtw.QSlider.TicksRight)
+        self.volume_slider.setTickInterval(10)
+        self.volume_slider.valueChanged.connect(self.set_volume)
+        volume_layout=qtw.QVBoxLayout()
+        volume_label = qtw.QLabel('Volume')
+        volume_layout.addWidget(volume_label)
+        volume_layout.addWidget(self.volume_slider)
+
+         # wrap volume layout in a widget so it can be added to the horizontal layout
+        volume_widget = qtw.QWidget()
+        volume_widget.setMaximumWidth(60)
+        volume_widget.setLayout(volume_layout)    
+        video_volume_layout.addWidget(volume_widget, stretch=1)
+
+        #add the combined layout to the left tab
+
+        left_layout.addLayout(video_volume_layout)
         self.token=''  # fix here
 
         # Playback controls
@@ -81,7 +104,7 @@ class MainWindow(qtw.QMainWindow):
         if sys.platform.startswith('linux'):
           self.player.set_xwindow(int(self.video_frame.winId()))
         elif sys.platform.startswith('win32'):  
-          self.player.set_hwind(self.video_frame.winId())  
+          self.player.set_hwnd(self.video_frame.winId())  
         elif sys.platform.startswith('darwin'): #mac
           self.player.set_nsobject(int(self.video_frame.winId())) 
         #self.player.set_hwnd(win_id)
@@ -147,7 +170,9 @@ class MainWindow(qtw.QMainWindow):
     def reset(self):       
         self.speed_slider.setValue(10)
 
-       
+    def set_volume(self,value):
+        self.player.audio_set_volume(value)
+   
 if __name__ == '__main__':
     app = qtw.QApplication(sys.argv)
     w = MainWindow()
