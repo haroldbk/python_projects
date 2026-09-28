@@ -1,1 +1,6 @@
+this is a python app that uses a list of AI generated jokes with a question and answer.
+The app uses:
+  customtkinter
+  Pandas
+  Text to Speech (tts)
 
