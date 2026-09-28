@@ -1,0 +1,17 @@
+Name: en-US-AvaNeural | Gender: Female
+Name: en-US-AndrewNeural | Gender: Male
+Name: en-US-EmmaNeural | Gender: Female
+Name: en-US-BrianNeural | Gender: Male
+Name: en-US-AnaNeural | Gender: Female
+Name: en-US-AndrewMultilingualNeural | Gender: Male
+Name: en-US-AriaNeural | Gender: Female
+Name: en-US-AvaMultilingualNeural | Gender: Female
+Name: en-US-BrianMultilingualNeural | Gender: Male
+Name: en-US-ChristopherNeural | Gender: Male
+Name: en-US-EmmaMultilingualNeural | Gender: Female
+Name: en-US-EricNeural | Gender: Male
+Name: en-US-GuyNeural | Gender: Male
+Name: en-US-JennyNeural | Gender: Female
+Name: en-US-MichelleNeural | Gender: Female
+Name: en-US-RogerNeural | Gender: Male
+Name: en-US-SteffanNeural | Gender: Male
