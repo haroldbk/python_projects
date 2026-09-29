@@ -30,21 +30,24 @@ class App(ctk.CTk):
         self.clearButton.pack(pady=20)
         global num
 
-    def ask(self):
+ def ask(self):
         #self.question_bx.insert("0.0","this is the question")
         self.num,question=self.jokes.ask()        
         self.question_bx.insert('0.0',question)
-        tt.play(question)
+        spkr='en-US-ChristopherNeural'
+        tt.play(question,spkr)
         
 
     def getAnswer(self):
         #self.answer_bx.insert('0.0','Now the answer')
         theAnswer = self.jokes.my_answer(self.num)
         self.answer_bx.insert('0.0',theAnswer)
-        tt.play(theAnswer)
+        spkr = "en-US-EmmaNeural"  # You can change this to any available voice
+        tt.play(theAnswer, spkr)
     def clear(self):
          self.question_bx.delete('1.0','end')
          self.answer_bx.delete('1.0','end')
+         tt.play('hahahahahah','en-US-EmmaMultilingualNeural')
 
 
 if __name__=="__main__":
