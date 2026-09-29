@@ -1,27 +1,58 @@
-import asyncio
-import edge_tts
-import pygame
+import pandas as pd
+import random
+import customtkinter as ctk
+import get_jokes
+import texting_edge_tts_v2 as tt
 
-async def speak(text,filename='output.mp3'):
-    communicate = edge_tts.Communicate(text=text,
-                                       voice= "en-US-EmmaNeural",
-                                       rate="+25%", #25% faster
-                                       pitch="-10Hz", #slightly deeper pitch
-                                       volume="+10%" #10% louder 
-                                       )
-    await communicate.save(filename)
 
-    # Play generated audio
-    if not pygame.mixer.get_init():
-        pygame.mixer.init()
-    pygame.mixer.music.load(filename=filename)
-    pygame.mixer.music.play()
-    while pygame.mixer.music.get_busy():
-            await asyncio.sleep(0.1)
-    #3. critical: unload audio file so the OS unlocks it
-    pygame.mixer.music.unload()        
+class App(ctk.CTk):
+    def __init__(self):
+        super().__init__()
+        self.title("jokes by AI")
+        self.geometry('600x800')
+        self.title("jokes by AI")
+        self.geometry('600x600')
+        self.jokes= get_jokes.jokes()
+        bfont=('Arial', 30)
 
-def play(mytext):
-    #text= "Hello! This uses natural neural voices without COM cleanup issues."
-    text = mytext
-    asyncio.run(speak(text))
+        self.askButton= ctk.CTkButton(self,text="the question is:", command=self.ask)
+        self.askButton.pack(pady=10)
+        #textbox for the question
+        self.question_bx = ctk.CTkTextbox(self,width=400,height=140, font=(bfont))
+        self.question_bx.pack(padx=20, pady=(0, 20), fill="both", expand=True)
+        #get the answer 
+        self.getAnswerButton = ctk.CTkButton(self,text='get answer:', command=self.getAnswer)
+        self.getAnswerButton.pack(pady=20)
+        #dispay the answer
+        self.answer_bx = ctk.CTkTextbox(self, width=400,height=140, font=(bfont))
+        self.answer_bx.pack(padx=20, pady=(0, 20), fill="both", expand=True)
+        #clear both text boxes
+        self.clearButton= ctk.CTkButton(self,text='Clear',command=self.clear)
+        self.clearButton.pack(pady=20)
+        global num
+
+    def ask(self):
+        #self.question_bx.insert("0.0","this is the question")
+        self.num,question=self.jokes.ask()        
+        self.question_bx.insert('0.0',question)
+        spkr='en-US-ChristopherNeural'
+        tt.play(question,spkr)
+        
+
+    def getAnswer(self):
+        #self.answer_bx.insert('0.0','Now the answer')
+        theAnswer = self.jokes.my_answer(self.num)
+        self.answer_bx.insert('0.0',theAnswer)
+        spkr = "en-US-EmmaNeural"  # You can change this to any available voice
+        tt.play(theAnswer, spkr)
+    def clear(self):
+         self.question_bx.delete('1.0','end')
+         self.answer_bx.delete('1.0','end')
+         tt.play('hahahahahah','en-US-EmmaMultilingualNeural')
+
+
+if __name__=="__main__":
+    ctk.set_appearance_mode('System')
+    app =App()
+    app.mainloop()
+
