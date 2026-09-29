@@ -13,17 +13,19 @@ class App(ctk.CTk):
         self.title("jokes by AI")
         self.geometry('600x600')
         self.jokes= get_jokes.jokes()
+        bfont=('Arial',30)
+            
 
         self.askButton= ctk.CTkButton(self,text="the question is:", command=self.ask)
         self.askButton.pack(pady=10)
         #textbox for the question
-        self.question_bx = ctk.CTkTextbox(self,width=400,height=140)
+        self.question_bx = ctk.CTkTextbox(self,width=400,height=140,font=(bfont))
         self.question_bx.pack((padx=20, pady=(0, 20), fill="both", expand=True))
         #get the answer 
         self.getAnswerButton = ctk.CTkButton(self,text='get answer:', command=self.getAnswer)
         self.getAnswerButton.pack(pady=20)
         #dispay the answer
-        self.answer_bx = ctk.CTkTextbox(self, width=400,height=140)
+        self.answer_bx = ctk.CTkTextbox(self, width=400,height=140,font=(bfont)
         self.answer_bx.pack((padx=20, pady=(0, 20), fill="both", expand=True))
         #clear both text boxes
         self.clearButton= ctk.CTkButton(self,text='Clear',command=self.clear)
